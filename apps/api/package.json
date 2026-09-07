@@ -6,9 +6,9 @@
   "scripts": {
     "start": "node dist/apps/api/src/main.js",
     "start:dev": "ts-node src/main.ts",
-    "start:watch": "npx nest build --watch",
+    "start:watch": "nest build --watch",
     "start:prod": "node dist/apps/api/src/main.js",
-    "build": "npx nest build",
+    "build": "nest build",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev --name dev --skip-seed",
     "db:push": "prisma db push --skip-generate",
@@ -43,6 +43,7 @@
     "testEnvironment": "node"
   },
   "dependencies": {
+    "@nestjs/cli": "^11.0.0",
     "@nestjs/common": "^11.2.3",
     "@nestjs/config": "^4.0.0",
     "@nestjs/core": "^11.0.0",
@@ -63,7 +64,6 @@
     "socket.io": "^4.8.3"
   },
   "devDependencies": {
-    "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.0",
     "@types/express": "^5.0.0",
