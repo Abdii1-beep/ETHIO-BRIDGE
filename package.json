@@ -1,0 +1,27 @@
+{
+  "name": "ethio-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ETHIO-BRIDGE - AI-Powered Ethiopia-China Commercial & Business Platform",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "infra:up": "docker compose up -d",
+    "infra:down": "docker compose down",
+    "infra:logs": "docker compose logs -f",
+    "dev:api": "npm run start:dev -w @ethio/api",
+    "dev:web": "npm run dev -w @ehio/web",
+    "build": "npm run build -ws --if-present",
+    "test:api": "npm run test -w @ethio/api",
+    "test:api:e2e": "npm run test:e2e -w @ethio/api",
+    "db:generate": "npm run db:generate -w @ethio/api",
+    "db:migrate": "npm run db:migrate -w @ethio/api",
+    "db:seed": "npm run db:seed -w @ethio/api",
+    "db:setup": "npm run db:migrate && npm run db:seed"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,1123 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- Enums ----------
+
+enum VerificationLevel {
+  UNVERIFIED
+  BASIC_VERIFIED
+  BUSINESS_VERIFIED
+  PREMIUM_VERIFIED
+  SUSPENDED
+}
+
+enum UserApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum OrganizationStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+enum OrganizationBusinessType {
+  PLC
+  PRIVATE_COMPANY
+  SOLE_PROPRIETORSHIP
+  PARTNERSHIP
+  COOPERATIVE
+  NGO
+  SME
+  MANUFACTURER
+  TRADER
+  IMPORTER
+  EXPORTER
+  SERVICE_PROVIDER
+  OTHER
+}
+
+enum MemberStatus {
+  INVITED
+  ACTIVE
+  DISABLED
+}
+
+enum BillingType {
+  FREE
+  SUBSCRIPTION
+  PAY_PER_USE
+  ENTERPRISE
+}
+
+enum FeatureImplementationStatus {
+  IMPLEMENTED
+  PARTIAL
+  NOT_IMPLEMENTED
+}
+
+enum OrganizationFeatureStatus {
+  REQUESTED
+  ACTIVE
+  DISABLED
+  EXPIRED
+  SUSPENDED
+}
+
+enum FeatureRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum FinanceTransactionType {
+  INCOME
+  EXPENSE
+  TRANSFER
+  PAYMENT
+  RECEIPT
+}
+
+enum ChartAccountType {
+  ASSET
+  LIABILITY
+  EQUITY
+  INCOME
+  EXPENSE
+}
+
+enum ProductVisibility {
+  DRAFT
+  PRIVATE
+  BUSINESS_ONLY
+  PUBLIC
+  SUSPENDED
+  ARCHIVED
+}
+
+enum AppointmentStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  CANCELLED
+  COMPLETED
+}
+
+enum RfqStatus {
+  DRAFT
+  PUBLISHED
+  CLOSED
+}
+
+enum QuotationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  NEGOTIATING
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  COMPLETED
+  CANCELLED
+  DISPUTED
+}
+
+enum WalletTransactionType {
+  CREDIT
+  DEBIT
+  RESERVE
+  RELEASE
+  REFUND
+}
+
+enum WalletTransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum PaymentProvider {
+  ETHSWITCH
+  NBE_LICENSED_PARTNER
+  TELEBIRR
+  CHAPA
+  CASH
+}
+
+enum PaymentAttemptStatus {
+  INITIATED
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+enum CrmStage {
+  NEW
+  CONTACTED
+  QUALIFIED
+  NEGOTIATING
+  WON
+  LOST
+}
+
+// ---------- Identity & Access ----------
+
+model User {
+  id               String   @id @default(uuid())
+  email            String   @unique
+  phone            String?
+  passwordHash     String
+  name             String
+  avatarUrl        String?
+  preferredLanguage String  @default("en")
+  platformRole     String? // PLATFORM_SUPER_ADMIN / _FINANCE / _SUPPORT / _MODERATOR, null for regular users
+  approvalStatus   UserApprovalStatus @default(PENDING)
+  isActive         Boolean  @default(true)
+  isEmailVerified  Boolean  @default(false)
+  isPhoneVerified  Boolean  @default(false)
+  lastLoginAt      DateTime?
+  failedLoginCount Int      @default(0)
+  lockedUntil      DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  memberships    OrganizationMember[]
+  refreshTokens  RefreshToken[]
+  otpCodes       OtpCode[]
+  loginAttempts  LoginAttempt[]
+  auditLogs      AuditLog[]
+  ownedOrganizations Organization[]
+  invitedMembers ProfileInvitation[]
+  financeTransactions FinanceTransaction[]
+  featureRequests FeatureRequest[]
+  aiRequests     AiRequestRecord[]
+  tickets        Ticket[]
+  paymentAttempts PaymentAttempt[]
+}
+
+model Organization {
+  id                 String               @id @default(uuid())
+  ownerUserId        String
+  legalName          String
+  tradingName        String?
+  registrationNumber String?
+  tin                String?
+  businessType       OrganizationBusinessType
+  industry           String?
+  yearEstablished    Int?
+  description        String?
+  country            String?
+  region             String?
+  city               String?
+  address            String?
+  phone              String?
+  email              String?
+  website            String?
+  verificationLevel  VerificationLevel     @default(UNVERIFIED)
+  status             OrganizationStatus    @default(ACTIVE)
+  preferredLanguage  String                @default("en")
+  createdAt          DateTime              @default(now())
+  updatedAt          DateTime              @updatedAt
+
+  owner             User              @relation(fields: [ownerUserId], references: [id])
+  members           OrganizationMember[]
+  branches          Branch[]
+  departments       Department[]
+  roles             Role[]
+  orgFeatures       OrganizationFeature[]
+  featureRequests   FeatureRequest[]
+  profileInvitations ProfileInvitation[]
+  auditLogs         AuditLog[]
+  financeTransactions FinanceTransaction[]
+  chartAccounts     ChartAccount[]
+  
+  // Marketplace & Commercial Relations
+  wallet            Wallet?
+  subscriptions     OrganizationSubscription[]
+  usageRecords      UsageRecord[]
+  commissions       PlatformCommission[]
+  products          Product[]
+  buyerRfqs         Rfq[]
+  sellerQuotations  Quotation[]
+  buyerOrders       Order[]              @relation("BuyerOrders")
+  sellerOrders      Order[]             @relation("SellerOrders")
+  crmLeads          CrmLead[]
+  aiRequests        AiRequestRecord[]
+
+  @@index([ownerUserId])
+  @@index([country])
+}
+
+model OrganizationMember {
+  id             String        @id @default(uuid())
+  organizationId String
+  userId         String
+  status         MemberStatus  @default(INVITED)
+  title          String?
+  invitedById    String?
+  invitedAt      DateTime      @default(now())
+  joinedAt       DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  organization          Organization            @relation(fields: [organizationId], references: [id])
+  user                  User                    @relation(fields: [userId], references: [id])
+  roleAssignments       MemberRole[]
+  branchAssignments     MemberBranch[]
+  departmentAssignments MemberDepartment[]
+
+  @@unique([organizationId, userId])
+  @@index([organizationId])
+  @@index([userId])
+}
+
+model Branch {
+  id             String   @id @default(uuid())
+  organizationId String
+  name           String
+  city           String?
+  address        String?
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization     @relation(fields: [organizationId], references: [id])
+  assignments  MemberBranch[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+}
+
+model Department {
+  id             String   @id @default(uuid())
+  organizationId String
+  name           String
+  description    String?
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization        @relation(fields: [organizationId], references: [id])
+  assignments  MemberDepartment[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+}
+
+model MemberBranch {
+  id       String @id @default(uuid())
+  memberId String
+  branchId String
+
+  member OrganizationMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  branch Branch             @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  @@unique([memberId, branchId])
+  @@index([branchId])
+}
+
+model MemberDepartment {
+  id           String @id @default(uuid())
+  memberId     String
+  departmentId String
+
+  member     OrganizationMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  department Department         @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+
+  @@unique([memberId, departmentId])
+  @@index([departmentId])
+}
+
+// ---------- RBAC ----------
+
+model Role {
+  id             String   @id @default(uuid())
+  organizationId String
+  code           String? // set for built-in roles (COMPANY_OWNER etc.), null for custom roles
+  name           String
+  description    String?
+  isBuiltIn      Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization  Organization       @relation(fields: [organizationId], references: [id])
+  permissions   RolePermission[]
+  memberRoles   MemberRole[]
+
+  @@unique([organizationId, code])
+  @@unique([organizationId, name])
+  @@index([organizationId])
+}
+
+model Permission {
+  id             String    @id @default(uuid())
+  code           String    @unique
+  nameKey        String
+  descriptionKey String
+  category       String
+  isActive       Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  rolePermissions RolePermission[]
+}
+
+model RolePermission {
+  id           String @id @default(uuid())
+  roleId       String
+  permissionId String
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, permissionId])
+  @@index([permissionId])
+}
+
+model MemberRole {
+  id       String @id @default(uuid())
+  memberId String
+  roleId   String
+
+  member OrganizationMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  role   Role               @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([memberId, roleId])
+  @@index([roleId])
+}
+
+// ---------- Features & Entitlement (SDD §19) ----------
+
+model Feature {
+  id                   String                        @id @default(uuid())
+  code                 String                        @unique
+  nameKey              String
+  descriptionKey       String
+  category             String
+  billingType          BillingType                   @default(FREE)
+  implementationStatus FeatureImplementationStatus   @default(NOT_IMPLEMENTED)
+  isOperational        Boolean                       @default(false)
+  defaultUsageLimit    Int?
+  sortOrder            Int                           @default(0)
+  isActive             Boolean                       @default(true)
+  createdAt            DateTime                      @default(now())
+  updatedAt            DateTime                      @updatedAt
+
+  orgFeatures      OrganizationFeature[]
+  featureRequests  FeatureRequest[]
+}
+
+model OrganizationFeature {
+  id             String                      @id @default(uuid())
+  organizationId String
+  featureId      String
+  status         OrganizationFeatureStatus    @default(ACTIVE)
+  activationDate DateTime                    @default(now())
+  expirationDate DateTime?
+  usageLimit     Int?
+  usageCount     Int                         @default(0)
+  billingType    BillingType                 @default(FREE)
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  feature      Feature      @relation(fields: [featureId], references: [id])
+
+  @@unique([organizationId, featureId])
+  @@index([organizationId])
+  @@index([featureId])
+}
+
+model FeatureRequest {
+  id             String               @id @default(uuid())
+  organizationId String
+  featureId      String
+  requestedByUserId String?
+  status         FeatureRequestStatus @default(PENDING)
+  note           String?
+  reviewedById   String?
+  reviewNote     String?
+  reviewReason   String?
+  reviewedAt     DateTime?
+  createdAt      DateTime             @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  feature      Feature      @relation(fields: [featureId], references: [id])
+  requestedBy  User?        @relation(fields: [requestedByUserId], references: [id])
+
+  @@index([organizationId])
+  @@index([status])
+}
+
+// ---------- Onboarding ----------
+
+model ProfileInvitation {
+  id               String   @id @default(uuid())
+  organizationId   String
+  email            String
+  name             String?
+  roleId           String?
+  branchIds        String[] @default([])
+  departmentIds    String[] @default([])
+  inviteCode       String   @unique
+  claimOtpHash     String?
+  claimOtpExpiresAt DateTime?
+  claimAttempts    Int      @default(0)
+  maxClaimAttempts Int      @default(5)
+  status           String   @default("PENDING")
+  invitedByUserId  String
+  invitedAt        DateTime @default(now())
+  claimedAt        DateTime?
+  expiresAt        DateTime
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  invitedBy    User         @relation(fields: [invitedByUserId], references: [id])
+
+  @@index([organizationId])
+  @@index([email])
+}
+
+// ---------- Monetization, Wallets & Subscriptions (SDD §59–64, §90) ----------
+
+model Wallet {
+  id             String   @id @default(uuid())
+  organizationId String   @unique
+  currency       String   @default("ETB")
+  balance        Decimal  @default(0) @db.Decimal(18, 2)
+  lockedAmount   Decimal  @default(0) @db.Decimal(18, 2)
+  status         String   @default("ACTIVE")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  transactions WalletTransaction[]
+}
+
+model WalletTransaction {
+  id            String                  @id @default(uuid())
+  walletId      String
+  type          WalletTransactionType
+  amount        Decimal                 @db.Decimal(18, 2)
+  currency      String                  @default("ETB")
+  referenceType String                  // AI_SERVICE, SUBSCRIPTION, COMMISSION, TOPUP, WITHDRAWAL
+  referenceId   String?
+  description   String
+  status        WalletTransactionStatus @default(COMPLETED)
+  createdAt     DateTime                @default(now())
+
+  wallet Wallet @relation(fields: [walletId], references: [id], onDelete: Cascade)
+
+  @@index([walletId, createdAt])
+}
+
+model SubscriptionPlan {
+  id           String   @id @default(uuid())
+  code         String   @unique // FREE, BUSINESS, PROFESSIONAL, ENTERPRISE
+  name         String
+  description  String?
+  price        Decimal  @db.Decimal(18, 2)
+  currency     String   @default("ETB")
+  billingCycle String   @default("MONTHLY") // MONTHLY, YEARLY
+  features     String[] @default([])
+  limits       Json?
+  isActive     Boolean  @default(true)
+  sortOrder    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  subscriptions OrganizationSubscription[]
+}
+
+model OrganizationSubscription {
+  id             String   @id @default(uuid())
+  organizationId String
+  planId         String
+  status         String   @default("ACTIVE") // ACTIVE, CANCELLED, EXPIRED
+  startDate      DateTime @default(now())
+  endDate        DateTime?
+  autoRenew      Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  plan         SubscriptionPlan @relation(fields: [planId], references: [id])
+
+  @@index([organizationId])
+  @@index([planId])
+}
+
+model CommissionRule {
+  id              String   @id @default(uuid())
+  transactionType String   @default("B2B_TRADE") // B2B_TRADE, SERVICE, LOGISTICS
+  percentage      Decimal  @db.Decimal(5, 2)     // e.g. 2.00%
+  fixedFee        Decimal  @default(0) @db.Decimal(18, 2)
+  minFee          Decimal  @default(0) @db.Decimal(18, 2)
+  maxFee          Decimal  @default(0) @db.Decimal(18, 2)
+  currency        String   @default("ETB")
+  isActive        Boolean  @default(true)
+  effectiveDate   DateTime @default(now())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model PlatformCommission {
+  id             String   @id @default(uuid())
+  orderId        String?
+  organizationId String
+  grossAmount    Decimal  @db.Decimal(18, 2)
+  feeAmount      Decimal  @db.Decimal(18, 2)
+  netAmount      Decimal  @db.Decimal(18, 2)
+  partnerFee     Decimal  @default(0) @db.Decimal(18, 2)
+  currency       String   @default("ETB")
+  status         String   @default("PENDING") // PENDING, SETTLED, REFUNDED
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([orderId])
+}
+
+model UsageRecord {
+  id             String   @id @default(uuid())
+  organizationId String
+  featureCode    String
+  unitCount      Int      @default(1)
+  unitPrice      Decimal  @db.Decimal(18, 4)
+  totalCost      Decimal  @db.Decimal(18, 2)
+  currency       String   @default("ETB")
+  metadata       Json?
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, featureCode])
+}
+
+// ---------- Marketplace & Multilingual Products (SDD §29–32, §87) ----------
+
+model Product {
+  id             String            @id @default(uuid())
+  organizationId String
+  category       String
+  price          Decimal           @db.Decimal(18, 2)
+  compareAtPrice Decimal?          @db.Decimal(18, 2)
+  currency       String            @default("USD")
+  moq            Int               @default(1)
+  stockQuantity  Int               @default(0)
+  unit           String            @default("pcs")
+  originCountry  String            @default("CN")
+  visibility     ProductVisibility @default(PUBLIC)
+  isFeatured     Boolean           @default(false)
+  images         String[]          @default([])
+  videoUrl       String?
+  specs          Json?
+  viewCount      Int               @default(0)
+  contactWechat  String?
+  contactWhatsapp String?
+  contactPhone   String?
+  contactEmail   String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  organization Organization         @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  translations ProductTranslation[]
+  quotations   Quotation[]
+  views        ProductView[]
+
+  @@index([organizationId])
+  @@index([category])
+  @@index([visibility])
+}
+
+model ProductView {
+  id            String   @id @default(uuid())
+  productId     String
+  deviceId      String
+  firstViewedAt DateTime @default(now())
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, deviceId])
+  @@index([productId, firstViewedAt])
+}
+
+model ProductTranslation {
+  id          String   @id @default(uuid())
+  productId   String
+  language    String   // zh, en, am, om
+  title       String
+  description String
+  specs       Json?
+  isOriginal  Boolean  @default(false)
+  status      String   @default("PUBLISHED") // AI_GENERATED, REVIEW_REQUIRED, APPROVED, PUBLISHED
+  reviewedBy  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, language])
+  @@index([productId])
+  @@index([language])
+}
+
+// ---------- RFQ, Quotations & Orders (SDD §36–37, §66, §81, §87) ----------
+
+model Rfq {
+  id             String    @id @default(uuid())
+  buyerOrgId     String
+  title          String
+  description    String
+  targetCategory String
+  quantity       Int
+  unit           String    @default("pcs")
+  targetBudget   Decimal?  @db.Decimal(18, 2)
+  currency       String    @default("USD")
+  destination    String    @default("Ethiopia")
+  deliveryDate   DateTime?
+  status         RfqStatus @default(PUBLISHED)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  buyerOrg   Organization @relation(fields: [buyerOrgId], references: [id], onDelete: Cascade)
+  quotations Quotation[]
+  orders     Order[]
+
+  @@index([buyerOrgId])
+  @@index([targetCategory])
+  @@index([status])
+}
+
+model Quotation {
+  id           String          @id @default(uuid())
+  rfqId        String
+  sellerOrgId  String
+  productId    String?
+  unitPrice    Decimal         @db.Decimal(18, 2)
+  quantity     Int
+  totalPrice   Decimal         @db.Decimal(18, 2)
+  shippingCost Decimal         @default(0) @db.Decimal(18, 2)
+  currency     String          @default("USD")
+  moq          Int             @default(1)
+  deliveryDays Int             @default(15)
+  paymentTerms String?
+  validityDays Int             @default(30)
+  notes        String?
+  status       QuotationStatus @default(PENDING)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  rfq       Rfq          @relation(fields: [rfqId], references: [id], onDelete: Cascade)
+  sellerOrg Organization @relation(fields: [sellerOrgId], references: [id], onDelete: Cascade)
+  product   Product?     @relation(fields: [productId], references: [id], onDelete: SetNull)
+  orders    Order[]
+
+  @@index([rfqId])
+  @@index([sellerOrgId])
+  @@index([productId])
+}
+
+model Order {
+  id               String      @id @default(uuid())
+  buyerOrgId       String
+  sellerOrgId      String
+  rfqId            String?
+  quotationId      String?
+  totalAmount      Decimal     @db.Decimal(18, 2)
+  commissionAmount Decimal     @default(0) @db.Decimal(18, 2)
+  currency         String      @default("USD")
+  status           OrderStatus @default(PENDING)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  buyerOrg  Organization     @relation("BuyerOrders", fields: [buyerOrgId], references: [id], onDelete: Cascade)
+  sellerOrg Organization     @relation("SellerOrders", fields: [sellerOrgId], references: [id], onDelete: Cascade)
+  rfq       Rfq?             @relation(fields: [rfqId], references: [id], onDelete: SetNull)
+  quotation Quotation?       @relation(fields: [quotationId], references: [id], onDelete: SetNull)
+  payments  PaymentAttempt[]
+
+  @@index([buyerOrgId])
+  @@index([sellerOrgId])
+}
+
+model PaymentAttempt {
+  id          String               @id @default(uuid())
+  orderId     String?
+  ticketId    String?
+  userId      String
+  agentId     String?
+  provider    PaymentProvider      @default(NBE_LICENSED_PARTNER)
+  providerRef String?              @unique
+  amount      Decimal              @db.Decimal(18, 2)
+  currency    String               @default("ETB")
+  status      PaymentAttemptStatus @default(INITIATED)
+  paymentMethod String?
+  checkoutUrl String?
+  verified    Boolean              @default(false)
+  callbackReceived Boolean         @default(false)
+  webhookReceived Boolean          @default(false)
+  paidAt      DateTime?
+  failedAt    DateTime?
+  metadata    Json?
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  order Order? @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([ticketId])
+  @@index([userId])
+  @@index([status])
+}
+
+// ---------- Chat & Connections (SDD §38–39, §82, §87) ----------
+
+model Conversation {
+  id          String     @id @default(uuid())
+  orgAId      String
+  orgBId      String
+  type        String     @default("DIRECT")
+  referenceId String?
+  lastRead    Json?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  messages ChatMessage[]
+  appointments VideoAppointment[]
+
+  @@index([orgAId])
+  @@index([orgBId])
+}
+
+model ChatMessage {
+  id             String   @id @default(uuid())
+  conversationId String
+  senderUserId   String
+  senderOrgId    String
+  originalLang   String   @default("en")
+  originalText   String
+  translations   Json?
+  attachmentUrl  String?
+  createdAt      DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, createdAt])
+}
+
+model VideoAppointment {
+  id           String             @id @default(uuid())
+  conversationId String?
+  orgAId       String
+  orgBId       String
+  createdById  String
+  title        String
+  scheduledAt  DateTime
+  durationMins Int                @default(30)
+  meetingUrl   String
+  notes        String?
+  status       AppointmentStatus @default(PENDING) // PENDING, ACCEPTED, DECLINED, CANCELLED, COMPLETED
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+
+  @@index([orgAId])
+  @@index([orgBId])
+  @@index([conversationId])
+}
+
+model BusinessConnection {
+  id             String   @id @default(uuid())
+  requesterOrgId String
+  targetOrgId    String
+  status         String   @default("PENDING") // PENDING, ACCEPTED, REJECTED, BLOCKED
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([requesterOrgId, targetOrgId])
+  @@index([requesterOrgId])
+  @@index([targetOrgId])
+}
+
+// ---------- CRM (SDD §41, §87) ----------
+
+model CrmLead {
+  id             String   @id @default(uuid())
+  organizationId String
+  contactName    String
+  companyName    String
+  email          String?
+  phone          String?
+  stage          CrmStage @default(NEW)
+  dealValue      Decimal  @default(0) @db.Decimal(18, 2)
+  currency       String   @default("ETB")
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, stage])
+}
+
+// ---------- AI Requests & Tracking (SDD §76, §88) ----------
+
+model AiRequestRecord {
+  id             String   @id @default(uuid())
+  organizationId String
+  userId         String
+  service        String   // TRANSLATION, PRODUCT_GEN, MATCHING, DOCUMENT_AI, AUDIT
+  provider       String   // OPENAI, QWEN, CLAUDE, INTERNAL
+  model          String
+  inputUnits     Int      @default(0)
+  outputUnits    Int      @default(0)
+  cost           Decimal  @default(0) @db.Decimal(18, 4)
+  currency       String   @default("ETB")
+  status         String   @default("SUCCESS") // PENDING, PROCESSING, SUCCESS, FAILED, CANCELLED
+  errorMessage   String?
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, service])
+}
+
+// ---------- Finance (chart of accounts + transactions) ----------
+
+model ChartAccount {
+  id             String            @id @default(uuid())
+  organizationId String
+  code           String
+  name           String
+  type           ChartAccountType
+  parentId       String?
+  description    String?
+  isActive       Boolean           @default(true)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  organization Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  parent       ChartAccount?  @relation("AccountTree", fields: [parentId], references: [id])
+  children     ChartAccount[] @relation("AccountTree")
+  transactions FinanceTransaction[]
+
+  @@unique([organizationId, code])
+  @@index([organizationId, type])
+}
+
+model FinanceTransaction {
+  id             String                   @id @default(uuid())
+  organizationId String
+  type           FinanceTransactionType
+  accountId      String?
+  amount         Decimal                  @db.Decimal(18, 2)
+  currency       String                   @default("ETB")
+  description    String
+  occurredAt     DateTime                 @default(now())
+  createdById    String
+  createdAt      DateTime                 @default(now())
+  deletedAt      DateTime?
+  deletedById    String?
+
+  organization Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdBy     User          @relation(fields: [createdById], references: [id])
+  account       ChartAccount? @relation(fields: [accountId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([organizationId, deletedAt])
+  @@index([organizationId, accountId])
+}
+
+// ---------- Security / activity (SDD §58, §91) ----------
+
+model AuditLog {
+  id             String   @id @default(uuid())
+  requestId      String?
+  organizationId String?
+  userId         String?
+  action         String
+  entity         String?
+  entityId       String?
+  ip             String?
+  device         String?
+  userAgent      String?
+  oldValue       Json?
+  newValue       Json?
+  reason         String?
+  metadata       Json?
+  createdAt      DateTime @default(now())
+
+  organization Organization? @relation(fields: [organizationId], references: [id])
+  user         User?         @relation(fields: [userId], references: [id])
+
+  @@index([organizationId, createdAt])
+  @@index([userId, createdAt])
+  @@index([action])
+}
+
+model RefreshToken {
+  id           String    @id @default(uuid())
+  userId       String
+  tokenHash    String    @unique
+  expiresAt    DateTime
+  ip           String?
+  userAgent    String?
+  revokedAt    DateTime?
+  replacedById String?
+  createdAt    DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model OtpCode {
+  id          String    @id @default(uuid())
+  userId      String
+  purpose     String    // REGISTER_EMAIL | RESET | INVITE_CLAIM | LOGIN
+  channel     String    // EMAIL | PHONE
+  target      String    // email or phone
+  codeHash    String
+  expiresAt   DateTime
+  attempts    Int       @default(0)
+  maxAttempts Int       @default(5)
+  consumedAt  DateTime?
+  verifiedAt  DateTime?
+  createdAt   DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, purpose])
+}
+
+model LoginAttempt {
+  id        String   @id @default(uuid())
+  email     String
+  userId    String?
+  success   Boolean
+  ip        String?
+  userAgent String?
+  reason    String?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([email])
+  @@index([userId])
+}
+
+// ---------- Lottery System (Car Lottery) ----------
+
+enum LotteryStatus {
+  DRAFT
+  PUBLISHED
+  ACTIVE
+  SPINNING
+  COMPLETED
+  CANCELLED
+}
+
+enum TicketStatus {
+  PENDING
+  PAID
+  CANCELLED
+  WINNING
+  LOSING
+}
+
+model Car {
+  id          String   @id @default(uuid())
+  name        String
+  brand       String?
+  model       String?
+  year        Int?
+  color       String?
+  price       Decimal  @db.Decimal(18, 2)
+  currency    String   @default("ETB")
+  images      String[] @default([])
+  description String?
+  specs       Json?
+  isAvailable Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  lotteries   Lottery[]
+
+  @@index([isAvailable])
+}
+
+model Lottery {
+  id              String        @id @default(uuid())
+  carId           String
+  title           String
+  description     String?
+  ticketPrice     Decimal       @db.Decimal(18, 2)
+  currency        String        @default("ETB")
+  totalTickets    Int
+  soldTickets     Int           @default(0)
+  spinDueDate     DateTime
+  actualSpinDate  DateTime?
+  status          LotteryStatus @default(DRAFT)
+  winnerTicketId  String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  car        Car         @relation(fields: [carId], references: [id], onDelete: Cascade)
+  tickets    Ticket[]
+  spinResult SpinResult?
+
+  @@index([status])
+  @@index([spinDueDate])
+  @@index([carId])
+  @@index([winnerTicketId])
+}
+
+model Ticket {
+  id          String        @id @default(uuid())
+  lotteryId   String
+  userId      String
+  ticketNumber Int
+  status      TicketStatus @default(PENDING)
+  purchasedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  lottery Lottery @relation(fields: [lotteryId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([lotteryId, ticketNumber])
+  @@index([lotteryId])
+  @@index([userId])
+  @@index([status])
+}
+
+model SpinResult {
+  id              String   @id @default(uuid())
+  lotteryId       String   @unique
+  winningTicketId String
+  spinStartedAt   DateTime
+  spinCompletedAt DateTime
+  durationMs      Int
+  createdAt       DateTime @default(now())
+
+  lottery Lottery @relation(fields: [lotteryId], references: [id], onDelete: Cascade)
+
+  @@index([lotteryId])
+}

@@ -1,0 +1,448 @@
+{
+    "common": {
+        "appName": "EHIO-BRIDGE",
+        "tagline": "Maallaqa hojii AI qabu: Falaalama Itoophiyaa–China",
+        "logout": "Ba\u0027i",
+        "loading": "Ni fe\u0027eera…",
+        "saving": "Ni qusachaa jira…",
+        "error": "Dogoggorri uumame.",
+        "retry": "Irra deebi\u0027i",
+        "language": "Afaan",
+        "welcome": "Baga nagaan dhuftan",
+        "memberOf": "Miseensa",
+        "signIn": "Seeni"
+    },
+    "locale": {
+        "switch": "Afaan"
+    },
+    "nav": {
+        "dashboard": "Munda guddaa",
+        "team": "Garee fi fayyadamtoota",
+        "roles": "Gahee fi hayyuuwwan",
+        "branches": "Dameewwanifi kutaa",
+        "companyProfile": "Sirna maalummaa komiyaa",
+        "finance": "Maallaqa",
+        "features": "Tarree amala",
+        "createOrganization": "Dhaabbata uumi"
+    },
+    "auth": {
+        "loginTitle": "Dhaabbata keetti seeni",
+        "registerTitle": "Herrega kee uumi",
+        "verifyTitle": "Imeelii kee mirkaneessi",
+        "nameLabel": "Maqaa guutuu",
+        "emailLabel": "Teessoo imeelii",
+        "phoneLabel": "Lakkoofsa bilbilaa (fkn +251…)",
+        "passwordLabel": "Jecha iccitii",
+        "passwordHint": "Ummataa 8 tuqaalee wajjin iddoo duree tokko, qubee xiqqaa tokko, lakkoofsa tokko fi mallattoo tokko.",
+        "loginButton": "Seeni",
+        "registerButton": "Herrega uumi",
+        "verifyButton": "Mirkaneessi",
+        "resendButton": "Koodii irra deebi\u0027ii ergi",
+        "toRegister": "Haaraa? Herrega uumi",
+        "toLogin": "Herrega qabdaa? Seeni",
+        "invalidCredentials": "Imeelii ykn jecha iccitii dogoggoraa.",
+        "registerPending": "Koodiin mirkaneessaa imeelii keetti ergameera.",
+        "devCodeHint": "Mannee guddinaa: koodiin koo kan al tokkoo asii jala jira.",
+        "verifySuccess": "Imeeliin kee mirkanaa\u0027eera. Amma seenuu dandeessa.",
+        "verifyInvalid": "Koodiin sirrii miti ykn yeroon isaa darbe.",
+        "goToLogin": "Seensa itti fufi"
+    },
+    "org": {
+        "createTitle": "Komiyaa kee galmeessi",
+        "createSubtitle": "Dhaabbiin kee battalumatti uumama; gahee fi amaloota bu\u0027uuraa itti kennama.",
+        "legalNameLabel": "Maqaa seeraa komiyaa",
+        "tradingNameLabel": "Maqaa daldalaa",
+        "businessTypeLabel": "Gosa daldalaa",
+        "industryLabel": "Rammoo industirii",
+        "yearEstablishedLabel": "Waggaa hundeeffame",
+        "countryLabel": "Biyya",
+        "regionLabel": "Naannoo / Mootummaa",
+        "cityLabel": "Magaalaa",
+        "addressLabel": "Teessoo",
+        "phoneLabel": "Bilbila",
+        "emailLabel": "Imeelii hojii",
+        "websiteLabel": "Weebsaayitii",
+        "registrationNumberLabel": "Lakkoofsa galmee daldalaa",
+        "tinLabel": "Lakkoofsa eenyummaa qaraxaa (TIN)",
+        "preferredLanguageLabel": "Afaan filatamaa",
+        "descriptionLabel": "Ibsa",
+        "createButton": "Dhaabbata uumi",
+        "created": "Dhaabbanni uumameera. Baga nagaan dhuftan!",
+        "required": "Barbaachisaa",
+        "businessTypes": {
+            "PLC": "Komiyaa Ummataa Cufatamaa",
+            "PRIVATE_COMPANY": "Komiyaa Dhuunfaa Cufatamaa",
+            "SOLE_PROPRIETORSHIP": "Abbaa tokkicha",
+            "PARTNERSHIP": "Hayyoo",
+            "COOPERATIVE": "Koopparaatiivii",
+            "NGO": "Dhaabbata hojii miiraa",
+            "SME": "Dhaabbata xixiqqaa fi giddu-galeessa",
+            "MANUFACTURER": "Oomishaa",
+            "TRADER": "Daldalaa",
+            "IMPORTER": "Seenesaa",
+            "EXPORTER": "Erbituu",
+            "SERVICE_PROVIDER": "Kenneessaa tajaajilaa",
+            "OTHER": "Kaan"
+        }
+    },
+    "company": {
+        "title": "Sirna maalummaa komiyaa",
+        "subtitle": "Sirna daldalaa dhaabbata keetii.",
+        "editButton": "Sirna gulaali",
+        "cancelEdit": "Haqi",
+        "saveButton": "Sirna qusi",
+        "saved": "Sirni haaromameera.",
+        "businessTypeFixed": "Gosa daldalaa galmeessuu booda hin jijjiramu."
+    },
+    "dash": {
+        "greeting": "Akkam {name}!",
+        "activeFeatureSection": "Amala dhaabbata keef hojii irra jiru",
+        "availableFeatureSection": "Bakka hojii kee",
+        "availableSoonSection": "Karoorfame — kutaa itti aanu keessatti hiqama",
+        "noActiveFeatures": "Amalli homaatuu hin hojiirre.",
+        "noOrg": "Amma dura dhaabbata kamiyyuu miseensa miti.",
+        "featuresNote": "Wanti asitti mul\u0027atu hundinuu API dhaabbataa irraa dhufa — cabefattuu hin uumamanu.",
+        "membersBadge": "Miseensota",
+        "open": "Bani",
+        "planned": "Karoorfame",
+        "switchOrg": "Dhaabbata jijjiiri",
+        "orgCardTitle": "Dhaabbata kee",
+        "memberCount": "Misraama",
+        "branchCount": "Brancilee"
+    },
+    "team": {
+        "title": "Garee fi fayyadamtoota",
+        "subtitle": "Miseensota fi affeerraa eegaa jiran kan {org}.",
+        "membersTitle": "Miseensota",
+        "invitationsTitle": "Affeerraa eegaa jiran",
+        "empty": "Miseensi hin jiru.",
+        "role": "Gahee",
+        "status": "Haala",
+        "joined": "Miseessa taa\u0027e",
+        "name": "Maqaa",
+        "email": "Imeelii",
+        "actions": "Gocha",
+        "statusActive": "Hojii irra jira",
+        "statusPending": "Eegaa jira",
+        "inviteTitle": "Miseensa garee affeeri",
+        "inviteName": "Maqaa guutuu (filatamaa)",
+        "inviteEmail": "Imeelii hojii",
+        "inviteRole": "Gahee",
+        "inviteNote": "Affeerraa koodii al tokkoo wajjin kan itti ga\u0027u;seenuu irratti fudhachuu danda\u0027a.",
+        "inviteButton": "Affeerraa ergi",
+        "invited": "Affeerraan gara {email} ergameera.",
+        "assignRole": "Gahee ramadi",
+        "noRole": "Gaheen hin filatamne"
+    },
+    "branchesPage": {
+        "title": "Dameewwan fi kutaa",
+        "branchesTitle": "Dameewwan",
+        "departmentsTitle": "Kutaalee",
+        "branchesEmpty": "Dameen hin jiru.",
+        "departmentsEmpty": "Kutaallin hin jiru.",
+        "active": "Hojii irra jira",
+        "inactive": "Hojii irra hin jiru",
+        "name": "Maqaa",
+        "city": "Magaalaa",
+        "address": "Teessoo",
+        "description": "Ibsa",
+        "addBranch": "Brancii dabali",
+        "addDepartment": "Muummee dabali",
+        "save": "Olkaa\u0027i",
+        "cancel": "Dhaabi",
+        "edit": "Gulaali",
+        "delete": "Balessi",
+        "saved": "Olka\u0027ameera.",
+        "deleted": "Haquameera."
+    },
+    "roles": {
+        "title": "Gahee fi hayyuuwwan",
+        "subtitle": "Gaheen bu\u0027uuraa dursee qophaa\u0027eera. Gahee aadaa mataa kee matrikisii hayyuuwwan wajjin uumuu dandeessa.",
+        "rolesTitle": "Gaheewwan",
+        "empty": "Gaheen hin jiru.",
+        "createRole": "Gahee uumi",
+        "editRole": "Gahee gulaali",
+        "close": "Cufi",
+        "save": "Qusi",
+        "cancel": "Haqi",
+        "delete": "Haqi",
+        "nameLabel": "Maqaa gahee",
+        "descriptionLabel": "Ibsa",
+        "permissionsLabel": "Hayyuuwwan",
+        "members": "miseensota",
+        "builtIn": "Dursee qophaa\u0027e",
+        "custom": "Aadaa",
+        "saved": "Gaheen qusameera.",
+        "deleted": "Gaheen haqameera.",
+        "selectRole": "Gahee filadhu",
+        "categoryLabels": {
+            "company": "Komiyaa",
+            "users": "Fayyadamtoota",
+            "roles": "Gaheewwan",
+            "branches": "Dameewwan",
+            "departments": "Kutaalee",
+            "features": "Amaloota",
+            "finance": "Maallaqa",
+            "ai": "AI",
+            "audit": "Qormaata",
+            "billing": "Kaffaltii",
+            "products": "Oomishaalee",
+            "rfq": "Gaaffii gatii (RFQ)",
+            "messages": "Ergaawwan"
+        }
+    },
+    "permission": {
+        "ai": {
+            "use": {
+                "name": "Tajaajila AI fayyadami"
+            },
+            "usage": {
+                "view": {
+                    "name": "Fayyadama AI ilaali"
+                }
+            }
+        },
+        "products": {
+            "delete": {
+                "name": "Oomishaalee haqi"
+            },
+            "create": {
+                "name": "Oomishaalee uumi"
+            },
+            "view": {
+                "name": "Oomishaalee ilaali"
+            },
+            "edit": {
+                "name": "Oomishaalee gulaali"
+            },
+            "publish": {
+                "name": "Oomishaalee maxxansi"
+            }
+        },
+        "billing": {
+            "manage": {
+                "name": "Kaffaltii fi karoora bulchi"
+            },
+            "view": {
+                "name": "Kaffaltii ilaali"
+            }
+        },
+        "finance": {
+            "delete": {
+                "name": "Jijjiirama haqi"
+            },
+            "create": {
+                "name": "Jijjiirama fi herrega galmeessi"
+            },
+            "view": {
+                "name": "Maallaqa ilaali (herrega fi jijjiirama)"
+            },
+            "approve": {
+                "name": "Galtee maallaqaa mirkaneessi"
+            }
+        },
+        "company": {
+            "edit": {
+                "name": "Sirna komiyaa gulaali"
+            },
+            "view": {
+                "name": "Sirna komiyaa ilaali"
+            }
+        },
+        "messages": {
+            "send": {
+                "name": "Ergaa ergi"
+            },
+            "view": {
+                "name": "Ergaawwan ilaali"
+            }
+        },
+        "rfq": {
+            "respond": {
+                "name": "Gaaffii gatii deebisi"
+            },
+            "create": {
+                "name": "Gaaffii gatii uumi"
+            },
+            "view": {
+                "name": "Gaaffii gatii ilaali"
+            },
+            "manage": {
+                "name": "Gaaffii gatii bulchi"
+            }
+        },
+        "branches": {
+            "manage": {
+                "name": "Dameewwan bulchi"
+            },
+            "view": {
+                "name": "Dameewwan ilaali"
+            }
+        },
+        "departments": {
+            "manage": {
+                "name": "Kutaalee bulchi"
+            },
+            "view": {
+                "name": "Kutaalee ilaali"
+            }
+        },
+        "audit": {
+            "create": {
+                "name": "Galtee qormaataa uumi"
+            },
+            "view": {
+                "name": "Galmee qormaataa ilaali"
+            },
+            "finding": {
+                "create": {
+                    "name": "Argama qormaataa uumi"
+                },
+                "close": {
+                    "name": "Argama qormaataa cufi"
+                }
+            }
+        },
+        "features": {
+            "activate": {
+                "name": "Amaloota hiqi"
+            },
+            "request": {
+                "name": "Amaloota gaafadhu"
+            },
+            "view": {
+                "name": "Tarree amala ilaali"
+            },
+            "manage": {
+                "name": "Amaloota bulchi"
+            }
+        },
+        "users": {
+            "disable": {
+                "name": "Miseensota cufi"
+            },
+            "view": {
+                "name": "Miseensota garee ilaali"
+            },
+            "edit": {
+                "name": "Miseensota gulaali (gahee, damee)"
+            },
+            "invite": {
+                "name": "Miseensota garee affeeri"
+            }
+        },
+        "roles": {
+            "manage": {
+                "name": "Gahee uumi fi gulaali"
+            },
+            "view": {
+                "name": "Gahee fi hayyuuwwan ilaali"
+            }
+        }
+    },
+    "finance": {
+        "title": "Maallaqa",
+        "subtitle": "Tarree herregaa, jijjiirama fi gabaasa walitti qabaa.",
+        "overviewTitle": "Argama walguddifamaa",
+        "incoming": "Galii",
+        "outgoing": "Baasii",
+        "net": "Hanqaaquu",
+        "transactionCount": "Jijjiiramoota",
+        "accountCount": "Herregaa",
+        "topAccounts": "Herrega guddaa hangaan",
+        "byType": "Gosaan",
+        "accountsTitle": "Tarree herregaa",
+        "accountsSubtitle": "Herregoonni ramadaman maallaqni eessaa dhufee eessa dhaquu galmeessu.",
+        "createAccount": "Herrega dabali",
+        "editAccount": "Herrega gulaali",
+        "transactionsTitle": "Jijjiiramoota",
+        "addTransaction": "Jijjiirama galmeessi",
+        "code": "Koodii",
+        "name": "Maqaa",
+        "type": "Gosa",
+        "parent": "Abbaa",
+        "description": "Ibsa",
+        "active": "Hojii irra jira",
+        "inactive": "Hojii irra hin jiru",
+        "amount": "Hangaa",
+        "currency": "Maallaqa",
+        "account": "Herrega",
+        "occurredAt": "Guyyaa",
+        "noAccounts": "Herregaan hin jiru. Herrega jalqabaa kee gubbaa dabali.",
+        "noTransactions": "Jijjiiramni hin jiru.",
+        "transactionTypes": {
+            "INCOME": "Galii",
+            "EXPENSE": "Baasii",
+            "TRANSFER": "Geessisuu",
+            "PAYMENT": "Kaffaltii",
+            "RECEIPT": "Rasidi"
+        },
+        "accountTypes": {
+            "ASSET": "Qabeenya",
+            "LIABILITY": "Liqii",
+            "EQUITY": "Haala mirga",
+            "INCOME": "Galii",
+            "EXPENSE": "Baasii"
+        },
+        "deleteTransaction": "Haqi",
+        "accountCodeHint": "fkn 1000 qarshii harkaa, 4000 galii gurgurtaa, 5000 baasii.",
+        "parentNone": "Hin jiru (ol)",
+        "deleted": "Jijjiiramni haqameera.",
+        "accountSaved": "Herregaan qusameera.",
+        "accountCreated": "Herregaan uumameera."
+    },
+    "featuresPage": {
+        "title": "Tarree amala",
+        "subtitle": "Tarree dhugaa API dhaabbataa irraa, haala hojiirra oolmaa wajjin.",
+        "statusImplemented": "Raawwatame",
+        "statusPartial": "Gartokkee",
+        "statusNotImplemented": "Hin raawwatamne",
+        "operationalYes": "Hojii irra jira",
+        "operationalNo": "Amma hojii irra hin jiru",
+        "active": "Hojii irra jira",
+        "available": "Armaan jira"
+    },
+    "catalog": {
+        "COMPANY_PROFILE": "Sirna komiyaa",
+        "USERS": "Fayyadamtoota fi Gaheewwan",
+        "BRANCHES": "Dameewwan fi Kutaa",
+        "DEPARTMENTS": "Kutaalee fi Ramaddii",
+        "NOTIFICATIONS": "Beeksisota",
+        "FOUR_LANGUAGE_UI": "Fuula Afaan Afuri",
+        "BUSINESS_HUB": "Ijaarsa daldalaa",
+        "PRODUCTS": "Oomishaalee",
+        "SERVICES": "Tajaajiloota",
+        "BUSINESS_POSTS": "Barreeffamoota daldalaa",
+        "CROSS_LANGUAGE_SEARCH": "Barbaadaa Afaan Doggorgoraa",
+        "BUSINESS_CONNECTIONS": "Walqunnamtii daldalaa",
+        "MESSAGING": "Ergaa",
+        "RFQ": "Gaaffii Gatii",
+        "QUOTATION": "Gatii Akeeka",
+        "CRM": "Walqunnamtii Maamila (CRM)",
+        "SALES": "Gurgurtaa",
+        "INVENTORY": "Garaagara maallaqaa",
+        "PROCUREMENT": "Qulqullina madda",
+        "EXPENSES": "Baasiiwwan",
+        "FINANCE": "Maallaqa",
+        "AI_ASSISTANT": "Gargaaraa AI",
+        "AI_TRANSLATION": "Hiika AI",
+        "AI_PRODUCT": "Qorannoo Oomishaa AI",
+        "AI_MARKETING": "Xinbarbaaduu AI",
+        "AI_DOCUMENT": "Toleffama Waraqaa AI",
+        "AI_MATCHING": "Walitti makuu Daldalaa AI",
+        "AI_MARKET_INTELLIGENCE": "Hubannoo Gabayaa AI",
+        "AI_AUDIT": "Qormaata fi Waliigaltee AI",
+        "AUDIT": "Qormaata fi Waliigaltee",
+        "RISK_MANAGEMENT": "Bulchiinsa Miidhaa",
+        "BILLING": "Kaffaltii fi Karoora"
+    },
+    "errors": {
+        "generic": "Dogoggorri uumame. Maaloo deebi\u0027ii yaali.",
+        "UNAUTHORIZED": "Yeroo itti fayyadamtee darbeera. Maaloo deebi\u0027ii seeni.",
+        "FEATURE_NOT_ENABLED": "Amalli kun dhaabbata keef hin hiqamne.",
+        "FORBIDDEN": "Hayyuu sana hojjachuuf siif hin jiru.",
+        "VALIDATION_FAILED": "Maaloo caasaa ilaaliitii deebi\u0027ii yaali.",
+        "ORGANIZATION_HEADER_REQUIRED": "Maaloo dura dhaabbata filadhu.",
+        "AI_PROVIDER_NOT_CONFIGURED": "Tajaajilli AI kun gonee kana keessatti hin jiraatu."
+    }
+}

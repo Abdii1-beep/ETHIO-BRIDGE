@@ -1,0 +1,40 @@
+# dependencies
+node_modules/
+
+# builds
+dist/
+build/
+
+# next.js
+apps/web/.next/
+apps/web/out/
+*.tsbuildinfo
+next-env.d.ts
+
+# prisma generated client (regenerated on install/migrate)
+apps/api/node_modules/.prisma/
+apps/api/src/generated/
+
+# environment and secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+# Ethereal sandbox SMTP account (dev-only) - contains credentials
+.ethereal.env
+
+# logs
+*.log
+npm-debug.log*
+
+# test coverage
+coverage/
+
+# os / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# misc
+*.pid
