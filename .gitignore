@@ -2,8 +2,8 @@
 node_modules/
 
 # builds
-dist/
 build/
+!apps/web/dist
 
 # next.js
 apps/web/.next/
