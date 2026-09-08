@@ -1,7 +1,7 @@
 import { getAccessToken, getActiveOrganizationId, getRefreshToken, storeSession, clearSession, getCachedUser } from './auth';
 import type { LoginResult } from './types';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 const BASE = `${API_URL}/api/v1`;
 
 const DEVICE_KEY = 'ethio.device';

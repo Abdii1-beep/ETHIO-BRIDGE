@@ -59,7 +59,7 @@ export default function LotteryPage() {
     loadLotteries();
 
     // Initialize WebSocket connection
-    const socketInstance = io('http://localhost:3002');
+    const socketInstance = io(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001');
     setSocket(socketInstance);
 
     socketInstance.on('spin-start', (data: { lotteryId: string }) => {
@@ -110,7 +110,7 @@ export default function LotteryPage() {
       setBuyingTicket(true);
       
       // Step 1: Create a PENDING ticket
-      const ticketResponse = await fetch('http://localhost:3002/api/v1/tickets', {
+      const ticketResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/v1/tickets`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -127,7 +127,7 @@ export default function LotteryPage() {
       const ticket = ticketData.data;
       
       // Step 2: Initialize payment with Chapa
-      const paymentResponse = await fetch('http://localhost:3002/api/v1/payments/chapa/initialize-lottery', {
+      const paymentResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/v1/payments/chapa/initialize-lottery`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

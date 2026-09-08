@@ -53,12 +53,12 @@ export class PaymentsController {
       }
       
       // Redirect to frontend with payment status
-      const returnUrl = process.env.CHAPA_RETURN_URL || 'http://localhost:3003/payment/success';
+      const returnUrl = process.env.CHAPA_RETURN_URL || process.env.WEB_URL || 'http://localhost:3003/payment/success';
       const redirectUrl = `${returnUrl}?payment_attempt_id=${paymentAttempt.id}&status=${paymentAttempt.status}`;
       
       return res.redirect(redirectUrl);
     } catch (error: any) {
-      const cancelUrl = process.env.CHAPA_CANCEL_URL || 'http://localhost:3003/payment/failed';
+      const cancelUrl = process.env.CHAPA_CANCEL_URL || process.env.WEB_URL || 'http://localhost:3003/payment/failed';
       return res.redirect(`${cancelUrl}?error=${encodeURIComponent(error.message || 'Unknown error')}`);
     }
   }
