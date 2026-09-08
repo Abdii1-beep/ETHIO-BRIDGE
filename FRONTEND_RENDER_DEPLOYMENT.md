@@ -35,6 +35,8 @@ npm install && npm run build
 npm start
 ```
 
+**Publish Directory:** `.next`
+
 **Environment:** `Production`
 
 **Region:** `Ohio` (same as backend for lower latency)
