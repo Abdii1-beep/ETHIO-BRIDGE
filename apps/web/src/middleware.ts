@@ -12,6 +12,9 @@ export default function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Skip API routes, Next internals, and static files.
-  matcher: ['/((?!api|_next|_vercel|.*\\..*).*)'],
+  // Match all paths except API, Next internals, and static files
+  matcher: [
+    // Skip API routes
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ],
 };
