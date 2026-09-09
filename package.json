@@ -13,7 +13,7 @@
     "infra:logs": "docker compose logs -f",
     "dev:api": "npm run start:dev -w @ethio/api",
     "dev:web": "npm run dev -w @ehio/web",
-    "build": "npm run build -ws --if-present",
+    "build": "npm run db:generate -w @ethio/api && npm run build -ws --if-present",
     "test:api": "npm run test -w @ethio/api",
     "test:api:e2e": "npm run test:e2e -w @ethio/api",
     "db:generate": "npm run db:generate -w @ethio/api",
